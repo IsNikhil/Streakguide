@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Streak Read Receipts</title>
+  <meta name="author" content="Nikhil Shah">
+  <meta name="description" content="A simple step by step guide to see if your Gmail message was opened, using the free Streak extension for Chrome.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top bar: scroll progress line + "steps done" counter -->
+  <header class="topbar">
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>
+        Streak Guide
+      </a>
+      <div class="done-counter" aria-live="polite">
+        <span class="done-ring" aria-hidden="true"><span id="doneRingFill"></span></span>
+        <span id="doneCount">0 of 14 steps done</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. HERO -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <p class="eyebrow">A guide for students</p>
+      <h1>How to Know If Your Email Was Opened <span class="nowrap">(Streak for Gmail)</span></h1>
+      <p class="byline">Nikhil Shah &middot; ENGL3220 &middot; Fall 2026</p>
+      <p class="lead">This guide shows you how to see when someone opens your Gmail message, like a read receipt. You will use a free Chrome extension called Streak. It takes about 10 minutes.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#part1">Start</a>
+        <a class="link-more" href="guide.pdf" download>Download the PDF</a>
+      </div>
+
+      <!-- Animated story: envelope slides to the inbox, then the eye opens and turns orange -->
+      <svg class="hero-art" viewBox="0 0 640 230" role="img" aria-label="An envelope travels to an inbox, then an eye opens and turns orange to show the email was opened.">
+        <!-- dotted travel path -->
+        <path class="trail" d="M70 150 H450" />
+
+        <!-- inbox tray -->
+        <g class="inbox">
+          <rect x="455" y="120" width="140" height="80" rx="14" class="tray-back"/>
+          <path d="M455 150 h38 l12 18 h40 l12 -18 h38 v36 a14 14 0 0 1 -14 14 h-112 a14 14 0 0 1 -14 -14 z" class="tray-front"/>
+          <text x="525" y="226" text-anchor="middle" class="art-label">Inbox</text>
+        </g>
+
+        <!-- eye above the inbox -->
+        <g class="eye-wrap">
+          <g class="eye">
+            <path d="M470 60 Q525 12 580 60 Q525 108 470 60 Z" class="eye-white"/>
+            <circle cx="525" cy="60" r="17" class="eye-iris"/>
+            <circle cx="525" cy="60" r="7" class="eye-pupil"/>
+            <circle cx="531" cy="54" r="3" class="eye-shine"/>
+          </g>
+        </g>
+
+        <!-- envelope that travels -->
+        <g class="envelope">
+          <rect x="30" y="122" width="84" height="58" rx="8" class="env-body"/>
+          <path d="M34 128 L72 158 L110 128" class="env-flap"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <!-- Sticky side menu (wide screens only) -->
+    <aside class="sidenav" aria-label="Steps">
+      <nav>
+        <a href="#before" data-target="before" class="nav-section">Before you start</a>
+
+        <a href="#part1" data-target="part1" class="nav-section">Part 1: Install Streak</a>
+        <ol>
+          <li><a href="#p1-s1" data-target="p1-s1">Open the Streak page</a></li>
+          <li><a href="#p1-s2" data-target="p1-s2">Add Streak to Chrome</a></li>
+          <li><a href="#p1-s3" data-target="p1-s3">Confirm</a></li>
+          <li><a href="#p1-s4" data-target="p1-s4">Open Gmail</a></li>
+          <li><a href="#p1-s5" data-target="p1-s5">Give Streak permission</a></li>
+          <li><a href="#p1-s6" data-target="p1-s6">Choose email tracking</a></li>
+        </ol>
+
+        <a href="#part2" data-target="part2" class="nav-section">Part 2: Send a test email</a>
+        <ol>
+          <li><a href="#p2-s1" data-target="p2-s1">Start a new email</a></li>
+          <li><a href="#p2-s2" data-target="p2-s2">Write the email</a></li>
+          <li><a href="#p2-s3" data-target="p2-s3">Check the eye icon</a></li>
+          <li><a href="#p2-s4" data-target="p2-s4">Click Send</a></li>
+        </ol>
+
+        <a href="#part3" data-target="part3" class="nav-section">Part 3: See if it was opened</a>
+        <ol>
+          <li><a href="#p3-s1" data-target="p3-s1">Look at the Tracking panel</a></li>
+          <li><a href="#p3-s2" data-target="p3-s2">Open the email as the reader</a></li>
+          <li><a href="#p3-s3" data-target="p3-s3">Read the new result</a></li>
+          <li><a href="#p3-s4" data-target="p3-s4">Check your Sent list</a></li>
+        </ol>
+
+        <a href="#results" data-target="results" class="nav-section">What the results mean</a>
+        <a href="#fixes" data-target="fixes" class="nav-section">Quick fixes</a>
+      </nav>
+    </aside>
+
+    <main id="main">
+
+      <!-- 2. BEFORE YOU START -->
+      <section class="block reveal" id="before">
+        <h2>Before you start</h2>
+        <p>You need four things:</p>
+        <ul class="needs">
+          <li><span class="need-icon" aria-hidden="true">@</span>A Gmail account</li>
+          <li><span class="need-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 20h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>Google Chrome on a laptop or desktop computer</li>
+          <li><span class="need-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>About 10 minutes</li>
+          <li><span class="need-icon" aria-hidden="true">2</span>A second email address to send a test email to (your school email works)</li>
+        </ul>
+        <div class="callout">
+          <strong>How it works:</strong> Streak adds a tiny, hidden picture to the email you send. When the reader opens the email, that picture loads. Streak sees this and shows you a "view."
+        </div>
+      </section>
+
+      <!-- 3. PART 1 -->
+      <section class="part" id="part1">
+        <header class="part-head reveal">
+          <p class="part-label">Part 1 <span>6 steps</span></p>
+          <h2>Install Streak</h2>
+        </header>
+
+        <article class="step reveal" id="p1-s1">
+          <div class="step-top">
+            <span class="step-num">1</span>
+            <h3>Open the Streak page.</h3>
+            <label class="done"><input type="checkbox" data-step="p1-s1"><span>Done</span></label>
+          </div>
+          <p>Open Chrome. Click this link: <a class="long-link" href="https://chromewebstore.google.com/detail/streak-crm-for-gmail/pnnfemgpilpdaojpnkjdgfgbnnjojfik" target="_blank" rel="noopener">https://chromewebstore.google.com/detail/streak-crm-for-gmail/pnnfemgpilpdaojpnkjdgfgbnnjojfik</a>. It opens the Streak page in the Chrome Web Store.</p>
+        </article>
+
+        <article class="step reveal" id="p1-s2">
+          <div class="step-top">
+            <span class="step-num">2</span>
+            <h3>Add Streak to Chrome.</h3>
+            <label class="done"><input type="checkbox" data-step="p1-s2"><span>Done</span></label>
+          </div>
+          <p>Click the blue "Add to Chrome" button.</p>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/chrome-store-add-to-chrome.png" width="1150" height="200" alt="The Streak page in the Chrome Web Store with the blue Add to Chrome button." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/chrome-store-add-to-chrome.png</code></div>
+            <figcaption>The blue "Add to Chrome" button on the Streak page.</figcaption>
+          </figure>
+        </article>
+
+        <article class="step reveal" id="p1-s3">
+          <div class="step-top">
+            <span class="step-num">3</span>
+            <h3>Confirm.</h3>
+            <label class="done"><input type="checkbox" data-step="p1-s3"><span>Done</span></label>
+          </div>
+          <p>A small box pops up near the top of Chrome. It asks if you want to add Streak. Click "Add extension".</p>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/add-extension-popup.png" width="459" height="248" alt="A small Chrome pop up asking to add Streak, with the Add extension button." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/add-extension-popup.png</code></div>
+            <figcaption>The pop up box. Click "Add extension".</figcaption>
+          </figure>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/extension-added.png" width="325" height="145" alt="A Chrome message that says Streak CRM for Gmail has been added to Chrome." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/extension-added.png</code></div>
+            <figcaption>After you click "Add extension", Chrome shows this message.</figcaption>
+          </figure>
+        </article>
+
+        <article class="step reveal" id="p1-s4">
+          <div class="step-top">
+            <span class="step-num">4</span>
+            <h3>Open Gmail.</h3>
+            <label class="done"><input type="checkbox" data-step="p1-s4"><span>Done</span></label>
+          </div>
+          <p>Go to <a href="https://mail.google.com" target="_blank" rel="noopener">mail.google.com</a>. If Gmail is already open, refresh the page.</p>
+        </article>
+
+        <article class="step reveal" id="p1-s5">
+          <div class="step-top">
+            <span class="step-num">5</span>
+            <h3>Give Streak permission.</h3>
+            <label class="done"><input type="checkbox" data-step="p1-s5"><span>Done</span></label>
+          </div>
+          <p>Streak asks for permission to work with your Gmail. Pick your Google account and click "Allow".</p>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/allow-permission.png" width="361" height="275" alt="A Streak box that says Sign in to use Streak, with a Sign in with Google button." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/allow-permission.png</code></div>
+            <figcaption>First, click "Sign in with Google". Then pick your account and click "Allow".</figcaption>
+          </figure>
+        </article>
+
+        <article class="step reveal" id="p1-s6">
+          <div class="step-top">
+            <span class="step-num">6</span>
+            <h3>Choose email tracking.</h3>
+            <label class="done"><input type="checkbox" data-step="p1-s6"><span>Done</span></label>
+          </div>
+          <p>A window opens that says "Where do you want to start?" Click "Email &amp; link tracking". The box gets a blue border when you pick it. Then click "Next".</p>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/01-streak-welcome-choose-tracking.png" width="548" height="546" alt="The Streak welcome window asking Where do you want to start, with Email and link tracking picked." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/01-streak-welcome-choose-tracking.png</code></div>
+            <figcaption>Pick "Email &amp; link tracking", then click "Next".</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <!-- 4. PART 2 -->
+      <section class="part" id="part2">
+        <header class="part-head reveal">
+          <p class="part-label">Part 2 <span>4 steps</span></p>
+          <h2>Turn on tracking and send a test email</h2>
+        </header>
+
+        <article class="step reveal" id="p2-s1">
+          <div class="step-top">
+            <span class="step-num">1</span>
+            <h3>Start a new email.</h3>
+            <label class="done"><input type="checkbox" data-step="p2-s1"><span>Done</span></label>
+          </div>
+          <p>In Gmail, click "Compose" in the top left.</p>
+        </article>
+
+        <article class="step reveal" id="p2-s2">
+          <div class="step-top">
+            <span class="step-num">2</span>
+            <h3>Write the email.</h3>
+            <label class="done"><input type="checkbox" data-step="p2-s2"><span>Done</span></label>
+          </div>
+          <p>Type your second email address in the "To" line. Add a subject and a short message. In our test, the subject was "streak crm" and the message was "Find out if my email is opened?"</p>
+        </article>
+
+        <article class="step reveal" id="p2-s3">
+          <div class="step-top">
+            <span class="step-num">3</span>
+            <h3>Check the eye icon.</h3>
+            <label class="done"><input type="checkbox" data-step="p2-s3"><span>Done</span></label>
+          </div>
+          <p>Look at the bottom of the email window, next to the blue Send button. You will see a row of small icons. Find the eye. When the eye is orange, tracking is on. If it is not orange, click it once.</p>
+          <figure class="shot shot-left">
+            <button class="shot-btn" type="button">
+              <img src="images/02-gmail-compose-tracking-on.png" width="600" height="220" alt="A Gmail new message window with the orange Streak eye icon next to the Send button." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/02-gmail-compose-tracking-on.png</code></div>
+            <figcaption>The orange eye next to Send means tracking is on.</figcaption>
+          </figure>
+        </article>
+
+        <article class="step reveal" id="p2-s4">
+          <div class="step-top">
+            <span class="step-num">4</span>
+            <h3>Click Send.</h3>
+            <label class="done"><input type="checkbox" data-step="p2-s4"><span>Done</span></label>
+          </div>
+          <p>Click the blue "Send" button. Streak now watches this email.</p>
+        </article>
+      </section>
+
+      <!-- 5. PART 3 -->
+      <section class="part" id="part3">
+        <header class="part-head reveal">
+          <p class="part-label">Part 3 <span>4 steps</span></p>
+          <h2>See if your email was opened</h2>
+        </header>
+
+        <article class="step reveal" id="p3-s1">
+          <div class="step-top">
+            <span class="step-num">1</span>
+            <h3>Look at the Tracking panel.</h3>
+            <label class="done"><input type="checkbox" data-step="p3-s1"><span>Done</span></label>
+          </div>
+          <p>Right after you send, a "Tracking" panel shows on the right side of Gmail. It says "No views" and "Sent seconds ago." This means nobody has opened the email yet.</p>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/03-tracking-panel-no-views.png" width="304" height="434" alt="The Streak Tracking panel in Gmail showing No views and Sent seconds ago." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/03-tracking-panel-no-views.png</code></div>
+            <figcaption>Right after sending: "No views" yet.</figcaption>
+          </figure>
+        </article>
+
+        <article class="step reveal" id="p3-s2">
+          <div class="step-top">
+            <span class="step-num">2</span>
+            <h3>Open the email as the reader.</h3>
+            <label class="done"><input type="checkbox" data-step="p3-s2"><span>Done</span></label>
+          </div>
+          <p>Open your second email account and open the message you sent. Wait a few seconds. Then go back to the Tracking panel in your first account.</p>
+        </article>
+
+        <article class="step reveal" id="p3-s3">
+          <div class="step-top">
+            <span class="step-num">3</span>
+            <h3>Read the new result.</h3>
+            <label class="done"><input type="checkbox" data-step="p3-s3"><span>Done</span></label>
+          </div>
+          <p>The panel now says "Viewed seconds ago." It also shows the total views and total clicks. Each row below is one view. Each row shows a device icon, a place, and the time. In our test, there were 2 views at 3:11 PM, and the place was "Unknown location."</p>
+          <figure class="shot">
+            <button class="shot-btn" type="button">
+              <img src="images/04-tracking-panel-viewed.png" width="313" height="510" alt="The Streak Tracking panel showing Viewed seconds ago, 2 views at 3:11 PM, and Unknown location." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/04-tracking-panel-viewed.png</code></div>
+            <figcaption>After the reader opens it: "Viewed seconds ago" with 2 views.</figcaption>
+          </figure>
+        </article>
+
+        <article class="step reveal" id="p3-s4">
+          <div class="step-top">
+            <span class="step-num">4</span>
+            <h3>Check your Sent list.</h3>
+            <label class="done"><input type="checkbox" data-step="p3-s4"><span>Done</span></label>
+          </div>
+          <p>You can also see the result without opening the email. Go to your Sent folder. A green eye shows next to the message once it is opened. The word next to the eye tells you how long ago it was opened. Here, it says "seconds."</p>
+          <figure class="shot shot-wide">
+            <button class="shot-btn" type="button">
+              <img src="images/05-sent-list-eye-icon.png" width="661" height="29" alt="The Gmail Sent folder with a green eye and the word seconds next to the test message." onerror="this.closest('figure').classList.add('missing')">
+            </button>
+            <div class="placeholder"><strong>Photo coming soon</strong><code>images/05-sent-list-eye-icon.png</code></div>
+            <figcaption>The green eye in your Sent list means the email was opened.</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <!-- 6. WHAT THE RESULTS MEAN -->
+      <section class="block reveal" id="results">
+        <h2>What the results mean</h2>
+        <p>A "view" means the hidden picture in your email loaded. It is a good sign that the email was opened, but it is not perfect. Keep these limits in mind:</p>
+        <div class="limits">
+          <div class="limit">
+            <h3>The place can be unknown.</h3>
+            <p>In our test, the place was "Unknown location." Email apps like Gmail often hide the reader's real place.</p>
+          </div>
+          <div class="limit">
+            <h3>The number of views is not exact.</h3>
+            <p>One person can make more than one view, for example by opening the email on a phone and a laptop.</p>
+          </div>
+          <div class="limit">
+            <h3>No views does not mean unread.</h3>
+            <p>If the reader blocks images, Streak cannot see the open.</p>
+          </div>
+          <div class="limit">
+            <h3>The free plan shows limited details.</h3>
+            <p>The panel says "Upgrade for more info" for extra features. You do not need to pay to follow this guide.</p>
+          </div>
+        </div>
+        <div class="callout">
+          Use tracking in a fair way. It works well for school, club, and job emails, such as checking if a teacher or a team saw your message.
+        </div>
+      </section>
+
+      <!-- 7. QUICK FIXES -->
+      <section class="block reveal" id="fixes">
+        <h2>Quick fixes</h2>
+        <div class="faq">
+          <details>
+            <summary>No Tracking panel</summary>
+            <p>Refresh Gmail. Then check that the eye icon was orange before you clicked Send.</p>
+          </details>
+          <details>
+            <summary>Streak is missing in Gmail</summary>
+            <p>Open <code>chrome://extensions</code> in a new Chrome tab. Make sure the switch next to Streak is on.</p>
+          </details>
+          <details>
+            <summary>Still "No views"</summary>
+            <p>Wait a minute and refresh. Also make sure you sent the test to a different email address, not the same account you sent it from.</p>
+          </details>
+          <details>
+            <summary>Reader blocks images</summary>
+            <p>Streak cannot count the view in this case. This is normal.</p>
+          </details>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- 8. FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-buttons">
+        <a class="btn btn-primary" href="guide.pdf" download>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download the PDF
+        </a>
+        <a class="btn btn-ghost" href="https://chromewebstore.google.com/detail/streak-crm-for-gmail/pnnfemgpilpdaojpnkjdgfgbnnjojfik" target="_blank" rel="noopener">Get Streak in the Chrome Web Store</a>
+      </div>
+      <p class="credit">Made by Nikhil Shah for ENGL3220, Fall 2026.</p>
+      <p class="source">Source: Streak CRM for Gmail, Chrome Web Store: <a class="long-link" href="https://chromewebstore.google.com/detail/streak-crm-for-gmail/pnnfemgpilpdaojpnkjdgfgbnnjojfik" target="_blank" rel="noopener">https://chromewebstore.google.com/detail/streak-crm-for-gmail/pnnfemgpilpdaojpnkjdgfgbnnjojfik</a></p>
+    </div>
+  </footer>
+
+  <!-- Lightbox: shows a screenshot big -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Large screenshot" hidden>
+    <button class="lightbox-close" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+    </button>
+    <figure>
+      <img id="lightboxImg" src="" alt="">
+      <figcaption id="lightboxCap"></figcaption>
+    </figure>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
